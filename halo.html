@@ -1,0 +1,114 @@
+<html>
+	
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+			#info
+			{
+				position: absolute;
+				top: 100px;
+				width: 100%;
+				text-align: center;
+				z-index: 1200;
+				display:block;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="info">dianchi</div>
+		<script src="js/three.js"></script>
+		<script type="importmap">
+			{
+				"imports":
+				{
+					"three":"./three.js-dev/build/three.module.js"
+			    }
+			}
+		</script>
+		<script type="module">
+	   import {TextGeometry}from"./three.js-dev/examples/jsm/geometries/TextGeometry.js"
+		</script>
+		<script src="./three.js-dev/examples/js/loaders/GLTFLoader.js">;</script>
+		<script src="./three.js-dev/examples/js/loaders/FontLoader.js">;</script>
+		<script src="./three.js-dev/examples/js/controls/OrbitControls.js">;</script>
+		<script>
+			
+            //整体加载
+		const scene = new THREE.Scene();//场景
+		const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );//相机
+
+		const renderer = new THREE.WebGLRenderer();
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		document.body.appendChild( renderer.domElement );
+		const light = new THREE.PointLight(0xffffff, 1, 100, 1);//前场景灯光
+        light.position.set(0, 10, 10 );
+		scene.add(light);
+		const light1 = new THREE.PointLight(0xffffff, 1, 100, 1);//后场景灯光
+        light1.position.set(0, 10, -10 );
+		scene.add(light1);
+		const light2 = new THREE.PointLight(0xffffff, 1, 100, 1);//底部场景灯光
+        light2.position.set(0, -10, 10 );
+        scene.add(light2);
+		const loader = new GLTFLoader();
+		const axes=new THREE.AxesHelper(20);//坐标轴
+		scene.add(axes);
+		renderer.setClearColor(new THREE.Color(0xbbbbbb) )//渲染颜色
+
+function render() {
+  renderer.render(scene,camera);//执行渲染操作
+}
+render();
+var controls = new THREE.OrbitControls(camera,renderer.domElement);//创建控件对象
+controls.addEventListener('change', render);//监听鼠标、键盘事件
+
+           
+			//方块创造
+			/*const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+			const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+			const cube = new THREE.Mesh( geometry, material );
+			scene.add( cube );
+			function animate() {
+				requestAnimationFrame( animate );
+
+				cube.rotation.x += 0.01;
+				cube.rotation.y += 0.01;
+
+				renderer.render( scene, camera );
+			};
+
+			animate();*/
+
+            //模型导入
+		loader.load( './电池.gltf', function ( gltf ) 
+		{ console.log(gltf)
+        //设置模型大小
+        gltf.scene.scale.set(0.02, 0.02, 0.02);
+		scene.add( gltf.scene );},undefined,function ( error ){console.error( error ); } ); 
+        camera.position.z = 15;   
+		function animate() 
+        {
+	    requestAnimationFrame( animate );
+	    renderer.render( scene, camera );
+        }   	  
+        animate();
+		//
+       
+		//
+
+  
+
+//
+function animate()
+{
+ requestAnimationFrame(animate);
+ /*cube.rotation.x+=0.01;
+ cube.rotation.y+=0.01;*/
+ renderer.render(scene, camera);
+}
+animate();	
+			
+		</script>
+	</body>
+</html>
